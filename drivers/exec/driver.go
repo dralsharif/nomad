@@ -21,7 +21,6 @@ import (
 	"github.com/hashicorp/nomad/plugins/shared/hclspec"
 	"github.com/hashicorp/nomad/plugins/shared/loader"
 	"golang.org/x/net/context"
-	"golang.org/x/sys/unix"
 )
 
 const (
@@ -206,7 +205,7 @@ func (d *Driver) buildFingerprint() *drivers.Fingerprint {
 		return fp
 	}
 
-	if unix.Geteuid() != 0 {
+	if !utils.IsUnixRoot() {
 		fp.Health = drivers.HealthStateUnhealthy
 		fp.HealthDescription = "exec driver must run as root"
 		return fp
